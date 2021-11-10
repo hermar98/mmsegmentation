@@ -113,6 +113,8 @@ data
 *.log.json
 work_dirs/
 mmseg/.mim
+checkpoints
+pretrain
 
 # Pytorch
 *.pth
