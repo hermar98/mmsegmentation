@@ -1,5 +1,5 @@
 _base_ = [
-    './upernet_swin_tiny_patch4_window7_512x512_160k_cityscapes_'
+    './upernet_swin_tiny_patch4_window7_512x1024_80k_cityscapes_'
     'pretrain_ade_imagenet_224x224_1K.py'
 ]
 model = dict(
