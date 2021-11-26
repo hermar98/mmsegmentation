@@ -1,5 +1,5 @@
 _base_ = [
-    '../_base_/models/upernet_swin.py', '../_base_/datasets/cityscapes_769x769.py',
+    '../_base_/models/upernet_swin.py', '../_base_/datasets/cityscapes.py',
     '../_base_/default_runtime.py', '../_base_/schedules/schedule_80k.py'
 ]
 
@@ -13,9 +13,8 @@ model = dict(
         use_abs_pos_embed=False,
         drop_path_rate=0.3,
         patch_norm=True),
-    decode_head=dict(in_channels=[128, 256, 512, 1024], num_classes=19, align_corners=True),
-    auxiliary_head=dict(in_channels=512, num_classes=19, align_corners=True),
-    test_cfg=dict(mode='slide', crop_size=(769, 769), stride=(513, 513)))
+    decode_head=dict(in_channels=[128, 256, 512, 1024], num_classes=19),
+    auxiliary_head=dict(in_channels=512, num_classes=19))
 
 # AdamW optimizer, no weight decay for position embedding & layer norm
 # in backbone
