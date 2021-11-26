@@ -1,19 +1,21 @@
 _base_ = [
-    '../_base_/models/upernet_swin.py', '../_base_/datasets/cityscapes.py',
+    '../_base_/models/upernet_swin.py', '../_base_/datasets/cityscapes_769x769.py',
     '../_base_/default_runtime.py', '../_base_/schedules/schedule_80k.py'
 ]
+
 model = dict(
-    #pretrained='pretrain/swin_tiny_patch4_window7_224.pth',
+    pretrained='pretrain/swin_base_patch4_window7_224_22.pth',
     backbone=dict(
-        embed_dims=96,
-        depths=[2, 2, 6, 2],
-        num_heads=[3, 6, 12, 24],
+        embed_dims=128,
+        depths=[2, 2, 18, 2],
+        num_heads=[4, 8, 16, 32],
         window_size=7,
         use_abs_pos_embed=False,
         drop_path_rate=0.3,
         patch_norm=True),
-    decode_head=dict(in_channels=[96, 192, 384, 768], num_classes=30),
-    auxiliary_head=dict(in_channels=384, num_classes=30))
+    decode_head=dict(in_channels=[128, 256, 512, 1024], num_classes=19, align_corners=True),
+    auxiliary_head=dict(in_channels=512, num_classes=19, align_corners=True),
+    test_cfg=dict(mode='slide', crop_size=(769, 769), stride=(513, 513)))
 
 # AdamW optimizer, no weight decay for position embedding & layer norm
 # in backbone
@@ -42,3 +44,8 @@ lr_config = dict(
 
 # By default, models are trained on 8 GPUs with 2 images per GPU
 data = dict(samples_per_gpu=4)
+
+checkpoint_config = dict(by_epoch=False, interval=10000)
+evaluation = dict(interval=2000, metric='mIoU', pre_eval=True)
+
+load_from = 'checkpoints/upernet_swin_base_patch4_window7_512x512_160k_ade20k_pretrain_224x224_22K_20210526_211650-762e2178.pth'
